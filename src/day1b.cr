@@ -10,7 +10,7 @@ NUMBERS = {
   "eight" => "8ight",
   "nine"  => "9ine",
 }
-puts STDIN.gets_to_end.strip.split("\n").map { |i|
+p File.read_lines("txt/day1").map { |i|
   # perform twice for overlapping numbers ("eighthree")
   i.gsub(Regex.union(NUMBERS.keys), NUMBERS).gsub(Regex.union(NUMBERS.keys), NUMBERS)
 }.map(&.chars.select(&.ascii_number?)).map { |i| "#{i.first}#{i.last}".to_i }.sum
