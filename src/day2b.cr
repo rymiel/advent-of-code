@@ -6,7 +6,7 @@ p File.read_lines("txt/day2").map { |i|
     }.to_h
   }
 }.map { |bags|
-  ["red", "green", "blue"].map { |c| bags.max_of(&.fetch(c, 0)) }.product(1)
+  ["red", "green", "blue"].map { |c| bags.max_of(&.fetch(c, 0)) }.product
 }.sum
 
 # here's my original version of lines 10-12, but i thought i'd make it spicier afterwards
