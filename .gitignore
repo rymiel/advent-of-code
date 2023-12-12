@@ -4,3 +4,6 @@ txt/
 lib/
 shard.lock
 *.png
+perf.data
+perf.data.old
+
