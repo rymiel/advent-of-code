@@ -45,7 +45,7 @@ class GalaxyMap
   end
 
   def transpose
-    @map = @map.map { |(x, y)| {y, x} }.to_set
+    @map = @map.map(&.reverse).to_set
   end
 end
 
