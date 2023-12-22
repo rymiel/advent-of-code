@@ -3,20 +3,22 @@ record Vec3, x : Int32, y : Int32, z : Int32
 class Cube
   property a : Vec3
   property b : Vec3
+  @points : Set(Vec3)?
 
   def initialize(@a, @b)
   end
 
   def subcubes
-    points = Set(Vec3).new
+    return @points.not_nil! if @points
+    @points = Set(Vec3).new
     (a.x..b.x).each do |x|
       (a.y..b.y).each do |y|
         (a.z..b.z).each do |z|
-          points << Vec3.new x, y, z
+          @points.not_nil! << Vec3.new x, y, z
         end
       end
     end
-    points
+    @points.not_nil!
   end
 
   def floor
@@ -37,22 +39,14 @@ class Cube
     points
   end
 
-  def intersects?(other : Cube)
-    subcubes.intersects? other.subcubes
-  end
-
   def drop!(by = 1)
     @a = @a.copy_with(z: @a.z - by)
     @b = @b.copy_with(z: @b.z - by)
+    @points = nil
   end
 
-  def any_intersect(cubes : Array(Cube))
-    cubes.any? do |other|
-      next false if other.ceiling < floor
-      next false if other.floor > ceiling
-      next false if other == self
-      intersects? other
-    end
+  def includes?(point : Vec3)
+    point.x.in?((a.x..b.x)) && point.y.in?((a.y..b.y)) && point.z.in?((a.z..b.z))
   end
 end
 
@@ -65,9 +59,11 @@ cubes = File.read_lines("txt/day22").map do |line|
 end
 
 def drop(cubes : Array(Cube))
-  cubes.sort_by(&.floor).each_with_index do |cube, i|
+  dropped = Set(Vec3).new
+  cubes.sort_by(&.floor).each do |cube|
     if cube.floor == 1
       # on the ground
+      cube.subcubes.each { |i| dropped << i }
       next
     end
 
@@ -75,11 +71,12 @@ def drop(cubes : Array(Cube))
       # shift down
       cube.drop!
       break if cube.floor == 0
-      break if cube.any_intersect cubes
+      break if cube.subcubes.any? &.in? dropped
     end
 
     # bring back up
     cube.drop! -1
+    cube.subcubes.each { |i| dropped << i }
   end
 end
 
@@ -97,7 +94,7 @@ class CascadeState
           next if other == cube
           next if other.in? supported
 
-          if support_point.in? other.subcubes
+          if support_point.in? other
             supports[cube] << other
             supported_by[other] << cube
           end
