@@ -5,7 +5,11 @@
 2017/
 hs/
 txt/
+input/
 lib/
+!2024/lib/
+_build/
+.vscode/
 shard.lock
 *.png
 perf.data
