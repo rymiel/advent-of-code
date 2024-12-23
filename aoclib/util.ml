@@ -1,7 +1,8 @@
 type solver = in_channel -> int
 
-let solve (s : solver) (problem : string) : unit =
-  In_channel.with_open_text (Printf.sprintf "input/%s.txt" problem) (fun i ->
+let solve (year : int) (s : solver) (problem : string) : unit =
+  In_channel.with_open_text (Printf.sprintf "%d/txt/%s.txt" year problem)
+    (fun i ->
       let result = s i in
       if result <> 0 then Printf.printf "%d\n%!" result)
 

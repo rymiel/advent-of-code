@@ -1,3 +1,6 @@
+open Aoclib
+open Aoclib.Util
+
 let rec permute l n f =
   match (n, l) with
   | 1, _ -> List.iter (fun x -> f [ x ]) l
@@ -214,3 +217,24 @@ module Day15 = struct
     done;
     !last
 end
+
+let () =
+  let problem = Sys.argv.(1) in
+  let variant = Sys.argv.(2) in
+  let solver : solver =
+    match (problem, variant) with
+    | "day1", "a" -> day1a
+    | "day1", "b" -> day1b
+    | "day2", "a" -> day2a
+    | "day2", "b" -> day2b
+    | "day3", "a" -> day3a
+    | "day3", "b" -> day3b
+    | "day4", "a" -> day4a
+    | "day4", "b" -> day4b
+    | "day13", "a" -> day13a
+    | "day13", "b" -> failwith "todo"
+    | "day15", "a" -> Day15.day15a
+    | "day15", "b" -> Day15.day15b
+    | _ -> failwith (Printf.sprintf "Unknown problem %s %s" problem variant)
+  in
+  solve 2020 solver problem

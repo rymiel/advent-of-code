@@ -1489,18 +1489,6 @@ let () =
   let variant = Sys.argv.(2) in
   let solver : solver =
     match (problem, variant) with
-    | "2020day1", "a" -> Aoc2020.day1a
-    | "2020day1", "b" -> Aoc2020.day1b
-    | "2020day2", "a" -> Aoc2020.day2a
-    | "2020day2", "b" -> Aoc2020.day2b
-    | "2020day3", "a" -> Aoc2020.day3a
-    | "2020day3", "b" -> Aoc2020.day3b
-    | "2020day4", "a" -> Aoc2020.day4a
-    | "2020day4", "b" -> Aoc2020.day4b
-    | "2020day13", "a" -> Aoc2020.day13a
-    | "2020day13", "b" -> failwith "todo"
-    | "2020day15", "a" -> Aoc2020.Day15.day15a
-    | "2020day15", "b" -> Aoc2020.Day15.day15b
     | "day1", "a" -> day1a
     | "day1", "b" -> day1b
     | "day2", "a" -> day2a
@@ -1549,4 +1537,4 @@ let () =
     | "day23", "b" -> day23b
     | _ -> failwith (Printf.sprintf "Unknown problem %s %s" problem variant)
   in
-  solve solver problem
+  solve 2024 solver problem
