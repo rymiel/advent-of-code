@@ -1,5 +1,0 @@
-(executable
- (public_name aoc)
- (name main)
- (libraries aoc domainslib)
- (modes byte exe))

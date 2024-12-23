@@ -1,5 +1,5 @@
-open Aoc
-open Aoc.Util
+open Aoclib
+open Aoclib.Util
 
 let parse_day1 i = scan_lines i "%d %d%!" (fun a b -> (a, b)) |> List.split
 
