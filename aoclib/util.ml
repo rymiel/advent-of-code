@@ -9,6 +9,15 @@ let solve (year : int) (s : solver) (problem : string) : unit =
 let scan_lines (i : in_channel) fmt f =
   In_channel.input_lines i |> List.map (fun s -> Scanf.sscanf s fmt f)
 
+let scan_all i fmt f =
+  let rec aux i fmt f =
+    match Scanf.bscanf i fmt f with
+    | x -> x :: aux i fmt f
+    | exception End_of_file -> []
+  in
+  let i = Scanf.Scanning.from_channel i in
+  aux i fmt f
+
 let sum = List.fold_left ( + ) 0
 let product = List.fold_left ( * ) 1
 let chars s = String.to_seq s |> List.of_seq

@@ -645,12 +645,6 @@ let day12b i =
   Hashtbl.fold (fun region () i -> i + (area region * sides region)) regions 0
 
 let day13a i =
-  let i = Scanf.Scanning.from_channel i in
-  let rec scan_all i fmt f =
-    match Scanf.bscanf i fmt f with
-    | x -> x :: scan_all i fmt f
-    | exception End_of_file -> []
-  in
   let input =
     scan_all i
       "Button A: X+%d, Y+%d\nButton B: X+%d, Y+%d\nPrize: X=%d, Y=%d\n "
@@ -668,24 +662,9 @@ let day13a i =
     done;
     if !best = Int.max_int then None else Some !best
   in
-  List.filter_map
-    (fun (a, b, t) ->
-      Printf.printf "A=%a B=%a T=%a ... %!" Coord.print a Coord.print b
-        Coord.print t;
-      let solution = solve a b t in
-      Printf.printf "-> %s\n%!"
-        (Option.fold ~none:"Can't solve" ~some:string_of_int solution);
-      solution)
-    input
-  |> sum
-
-let rec scan_all i fmt f =
-  match Scanf.bscanf i fmt f with
-  | x -> x :: scan_all i fmt f
-  | exception End_of_file -> []
+  List.filter_map (fun (a, b, t) -> solve a b t) input |> sum
 
 let day13b i =
-  let i = Scanf.Scanning.from_channel i in
   let huge = 10_000_000_000_000 in
   let input =
     scan_all i
@@ -700,16 +679,7 @@ let day13b i =
     if Coord.(((ax, ay) * a) + ((bx, by) * b)) = (tx, ty) then Some ((a * 3) + b)
     else None
   in
-  List.filter_map
-    (fun (a, b, t) ->
-      Printf.printf "A=%a B=%a T=%a ... %!" Coord.print a Coord.print b
-        Coord.print t;
-      let solution = solve a b t in
-      Printf.printf "-> %s\n%!"
-        (Option.fold ~none:"Can't solve" ~some:string_of_int solution);
-      solution)
-    input
-  |> sum
+  List.filter_map (fun (a, b, t) -> solve a b t) input |> sum
 
 let day14a i =
   let input =
