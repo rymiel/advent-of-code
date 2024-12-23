@@ -692,23 +692,13 @@ let day13b i =
       "Button A: X+%d, Y+%d\nButton B: X+%d, Y+%d\nPrize: X=%d, Y=%d\n "
       (fun ax ay bx by tx ty -> ((ax, ay), (bx, by), (huge + tx, huge + ty)))
   in
-  let solve a b t =
-    let best = ref Int.max_int in
-    let smaller_x = min (fst a) (fst b) in
-    let smaller_y = min (snd a) (snd b) in
-    let x_lower_bound = fst t / smaller_x in
-    let y_lower_bound = snd t / smaller_y in
-    let lower_bound = min x_lower_bound y_lower_bound in
-    Printf.printf "sx=%d sy=%d; lx=%d ly=%d; %d %!" smaller_x smaller_y
-      x_lower_bound y_lower_bound lower_bound;
-    Seq.product (Seq.ints lower_bound) (Seq.ints lower_bound)
-    |> Seq.take 1_000_000
-    |> Seq.iter (fun (ia, ib) ->
-           let pos = Coord.((a * ia) + (b * ib)) in
-           if pos = t then
-             let cost = (3 * ia) + ib in
-             if cost < !best then best := cost);
-    if !best = Int.max_int then None else Some !best
+  let solve (ax, ay) (bx, by) (tx, ty) =
+    (* bad problem *)
+    let denom = (ax * by) - (ay * bx) in
+    let a = ((tx * by) - (bx * ty)) / denom in
+    let b = ((ax * ty) - (tx * ay)) / denom in
+    if Coord.(((ax, ay) * a) + ((bx, by) * b)) = (tx, ty) then Some ((a * 3) + b)
+    else None
   in
   List.filter_map
     (fun (a, b, t) ->
