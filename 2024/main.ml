@@ -74,22 +74,17 @@ let day3b i =
       Str.matched_string s
     with
     | "do()" ->
-        print_endline "do()";
         doing := true;
         read s
     | "don't()" ->
-        print_endline "don't()";
         doing := false;
         read s
     | _ ->
         let a = Str.matched_group 1 s |> int_of_string in
         let b = Str.matched_group 2 s |> int_of_string in
-        Printf.printf "(%d, %d)\n%!" a b;
         if !doing then acc := !acc + (a * b);
         read s
-    | exception Not_found ->
-        print_endline "not found";
-        ()
+    | exception Not_found -> ()
   in
   read s;
   !acc
