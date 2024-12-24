@@ -29,22 +29,6 @@ let read_combo x =
   | 6 -> C
   | _ -> failwith "invalid combo"
 
-let string_of_combo = function
-  | Literal i -> string_of_int i
-  | A -> "A"
-  | B -> "B"
-  | C -> "C"
-
-let string_of_op = function
-  | Adv c -> Printf.sprintf "adv %s" (string_of_combo c)
-  | Bxl i -> Printf.sprintf "bxl %d" i
-  | Bst c -> Printf.sprintf "bst %s" (string_of_combo c)
-  | Jnz i -> Printf.sprintf "jnz %d" i
-  | Bxc -> Printf.sprintf "bxc"
-  | Out c -> Printf.sprintf "out %s" (string_of_combo c)
-  | Bdv c -> Printf.sprintf "bdv %s" (string_of_combo c)
-  | Cdv c -> Printf.sprintf "cdv %s" (string_of_combo c)
-
 type state = {
   a : int;
   b : int;
@@ -62,12 +46,7 @@ let resolve_combo state = function
   | B -> state.b
   | C -> state.c
 
-let dv state c =
-  Printf.printf "dv %d / %d (2^%s = 2^%d) = %d\n%!" state.a
-    (pow2 (resolve_combo state c))
-    (string_of_combo c) (resolve_combo state c)
-    (state.a / pow2 (resolve_combo state c));
-  state.a / pow2 (resolve_combo state c)
+let dv state c = state.a / pow2 (resolve_combo state c)
 
 let read_op a b =
   match a with
@@ -99,11 +78,9 @@ let eval state = function
 let eval_all a b c ops =
   let state = { a; b; c; ops; ip = 0; out = [] } in
   let rec step state =
-    Printf.printf "a:%d b:%d c:%d ip:%d\n%!" state.a state.b state.c state.ip;
     if state.ip >= Array.length state.ops then state
     else
       let op = read_op state.ops.(state.ip) state.ops.(state.ip + 1) in
-      Printf.printf "[%d] %s\n%!" state.ip (string_of_op op);
       step (eval state op)
   in
   (step state).out |> List.rev |> List.map string_of_int |> String.concat ","
