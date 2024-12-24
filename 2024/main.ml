@@ -1474,12 +1474,14 @@ module Day24 = struct
     let initial, gates = parse i in
     let state = Hashtbl.create 1_000_000 in
     let affected = Hashtbl.create 1_000_000 in
+
     List.iter
       (fun g ->
         Hashtbl.add affected g.left g;
         Hashtbl.add affected g.right g)
       gates;
     List.iter (fun (k, v) -> Hashtbl.replace state k v) initial;
+
     let rec propagate signal =
       Hashtbl.find_all affected signal
       |> List.iter (fun gate ->
@@ -1492,18 +1494,15 @@ module Day24 = struct
                  propagate gate.out
              | _ -> ())
     in
+
     List.iter (fun (k, _) -> propagate k) initial;
-    Hashtbl.iter (fun k v -> Printf.printf "%s %b\n" k v) state;
-    let zs =
-      Hashtbl.to_seq state
-      |> Seq.filter (fun (k, _) -> k.[0] = 'z')
-      |> List.of_seq |> List.sort compare
-    in
-    List.map (fun (k, v) -> Printf.sprintf "[%s %b]" k v) zs
-    |> String.concat "; " |> print_endline;
-    List.fold_left
-      (fun (i, mul) (_, b) -> ((i + if b then mul else 0), mul lsl 1))
-      (0, 1) zs
+
+    Hashtbl.to_seq state
+    |> Seq.filter (fun (k, _) -> k.[0] = 'z')
+    |> List.of_seq |> List.sort compare
+    |> List.fold_left
+         (fun (i, mul) (_, b) -> ((i + if b then mul else 0), mul lsl 1))
+         (0, 1)
     |> fst
 
   exception RecoveryError of (string * string)
