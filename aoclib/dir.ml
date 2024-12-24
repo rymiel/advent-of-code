@@ -12,3 +12,15 @@ let to_string = function
   | Down -> "Down"
   | Left -> "Left"
   | Right -> "Right"
+
+let rotate_cw = function
+  | Up -> Right
+  | Right -> Down
+  | Down -> Left
+  | Left -> Up
+
+let rotate_ccw = function
+  | Up -> Left
+  | Right -> Up
+  | Down -> Right
+  | Left -> Down

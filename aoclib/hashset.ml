@@ -7,3 +7,4 @@ let add s v = Hashtbl.replace s v ()
 let remove = Hashtbl.remove
 let mem = Hashtbl.mem
 let iter f set = Hashtbl.iter (fun k () -> f k) set
+let clear = Hashtbl.clear
