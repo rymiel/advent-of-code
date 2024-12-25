@@ -32,6 +32,11 @@ let count_item i = count_matches (( = ) i)
 let count_char char =
   String.fold_left (fun n c -> if c = char then n + 1 else n) 0
 
+let seq_count_matches pred =
+  Seq.fold_left (fun n c -> if pred c then n + 1 else n) 0
+
+let seq_count_item i = seq_count_matches (( = ) i)
+
 let fold_lefti f acc l =
   List.fold_left (fun (a, i) j -> (f a j i, i + 1)) (acc, 0) l |> fst
 

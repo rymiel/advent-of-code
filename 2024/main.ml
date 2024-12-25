@@ -53,6 +53,7 @@ let () =
     | "day23", "b" -> Day23.day23b
     | "day24", "a" -> Day24.day24a
     | "day24", "b" -> Day24.day24b
+    | "day25", "a" -> Day25.day25a
     | _ -> failwith (Printf.sprintf "Unknown problem %s %s" problem variant)
   in
   solve 2024 solver problem
