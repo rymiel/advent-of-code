@@ -2,7 +2,6 @@ module type OrderedType = sig
   type t
 
   val compare : t -> t -> int
-  val to_string : t -> string
 end
 
 module type S = sig
