@@ -2,6 +2,7 @@ open Aoclib.Util
 open Aoclib
 
 let scan s =
+  let s = Scanf.Scanning.from_channel s in
   Scanf.bscanf s
     "Register A: %i\nRegister B: %i\nRegister C: %i\n\nProgram: %s %!"
     (fun a b c p ->
@@ -119,14 +120,12 @@ let eval_all a b c ops =
   (step state).out |> List.rev
 
 let day17a i =
-  let i = Scanf.Scanning.from_channel i in
   let a, b, c, ops = scan i in
   eval_all a b c ops |> List.map string_of_int |> String.concat ","
   |> print_endline;
   0
 
 let day17b i =
-  let i = Scanf.Scanning.from_channel i in
   let _, b, c, ops = scan i in
   let initial_set = Hashset.create 1_000_000 in
   Hashset.add initial_set 0;
