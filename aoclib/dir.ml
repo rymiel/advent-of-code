@@ -24,3 +24,7 @@ let rotate_ccw = function
   | Right -> Up
   | Down -> Right
   | Left -> Down
+
+let scale dir n =
+  let x, y = to_coord dir in
+  (x * n, y * n)
