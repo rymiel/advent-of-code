@@ -18,27 +18,24 @@ let scan_all i fmt f =
   let i = Scanf.Scanning.from_channel i in
   aux i fmt f
 
-let sum = List.fold_left ( + ) 0
-let product = List.fold_left ( * ) 1
+module ListExt = Containers.Make (List)
+module ArrayExt = Containers.Make (Array)
+module SeqExt = Containers.Make (Seq)
+
+(* backwards compatibility *)
+let sum = ListExt.sum
+let product = ListExt.product
+let count_matches = ListExt.count_matches
+let count_item = ListExt.count_item
+let fold_lefti = ListExt.fold_lefti
+(* end backwards compatibility *)
+
 let chars s = String.to_seq s |> List.of_seq
 let string_of_char = String.make 1
 let chars_s = Fun.compose (List.map string_of_char) chars
 
-let count_matches pred =
-  List.fold_left (fun n c -> if pred c then n + 1 else n) 0
-
-let count_item i = count_matches (( = ) i)
-
 let count_char char =
   String.fold_left (fun n c -> if c = char then n + 1 else n) 0
-
-let seq_count_matches pred =
-  Seq.fold_left (fun n c -> if pred c then n + 1 else n) 0
-
-let seq_count_item i = seq_count_matches (( = ) i)
-
-let fold_lefti f acc l =
-  List.fold_left (fun (a, i) j -> (f a j i, i + 1)) (acc, 0) l |> fst
 
 let as_pair = function [ a; b ] -> (a, b) | _ -> failwith "not a pair"
 

@@ -6,7 +6,7 @@ let partition_locks_keys = function
       let is_lock = head = "#####" in
       let columns =
         List.to_seq tail |> Seq.take 5 |> Seq.map String.to_seq |> Seq.transpose
-        |> Seq.map (seq_count_item '#')
+        |> Seq.map (SeqExt.count_item '#')
         |> List.of_seq
       in
       (if is_lock then Either.left else Either.right) columns
