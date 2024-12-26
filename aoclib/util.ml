@@ -204,3 +204,22 @@ let head (seq : 'a Seq.t) : 'a =
   | Seq.Cons (a, _) -> a
 
 module StringSet = Set.Make (String)
+
+let array_shift_left arr n =
+  let last = Array.length arr - 1 in
+  let new_arr =
+    Array.mapi (fun i _ -> if i = last then n else arr.(i + 1)) arr
+  in
+  new_arr
+
+let sliding_window : 'a. int -> 'a Seq.t -> 'a array Seq.t =
+ fun size seq ->
+  match seq () with
+  | Seq.Nil -> Seq.empty
+  | Seq.Cons (x, rest) ->
+      let initial = Array.make size x in
+      Seq.scan (fun arr n -> array_shift_left arr n) initial rest
+      |> Seq.drop (size - 1)
+
+let sliding_pair : 'a. 'a Seq.t -> ('a * 'a) Seq.t =
+ fun seq -> sliding_window 2 seq |> Seq.map (fun arr -> (arr.(0), arr.(1)))

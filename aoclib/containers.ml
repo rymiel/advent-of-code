@@ -12,6 +12,9 @@ module type S = sig
   val count_matches : ('a -> bool) -> 'a t -> int
   val count_item : 'a -> 'a t -> int
   val fold_lefti : ('acc -> 'a -> int -> 'acc) -> 'acc -> 'a t -> 'acc
+  val max : int t -> int
+  val min : int t -> int
+  val map_sum : ('a -> int) -> 'a t -> int
 end
 
 module Make (C : Container) : S with type 'a t := 'a C.t = struct
@@ -25,4 +28,8 @@ module Make (C : Container) : S with type 'a t := 'a C.t = struct
 
   let fold_lefti f acc c =
     C.fold_left (fun (a, i) j -> (f a j i, i + 1)) (acc, 0) c |> fst
+
+  let max = C.fold_left max Int.min_int
+  let min = C.fold_left min Int.max_int
+  let map_sum f = C.fold_left (fun acc i -> acc + f i) 0
 end

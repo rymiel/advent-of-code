@@ -12,6 +12,9 @@ module type S = sig
   val count_matches : ('a -> bool) -> 'a t -> int
   val count_item : 'a -> 'a t -> int
   val fold_lefti : ('acc -> 'a -> int -> 'acc) -> 'acc -> 'a t -> 'acc
+  val max : int t -> int
+  val min : int t -> int
+  val map_sum : ('a -> int) -> 'a t -> int
 end
 
 module Make : functor (C : Container) -> S with type 'a t := 'a C.t
