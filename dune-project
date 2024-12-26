@@ -6,4 +6,4 @@
 
 (package
  (name aoc)
- (depends ocaml zarith))
+ (depends ocaml zarith domainslib))
