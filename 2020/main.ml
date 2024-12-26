@@ -30,7 +30,7 @@ let () =
     | "day12", "a" -> Day12.day12a
     | "day12", "b" -> Day12.day12b
     | "day13", "a" -> Day13.day13a
-    | "day13", "b" -> failwith "todo"
+    | "day13", "b" -> Day13.day13b
     | "day15", "a" -> Day15.day15a
     | "day15", "b" -> Day15.day15b
     | _ -> failwith (Printf.sprintf "Unknown problem %s %s" problem variant)
