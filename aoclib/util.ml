@@ -52,6 +52,11 @@ let partition_at split_at list =
   in
   part [] [] false list
 
+let rec partition_all split_at list =
+  match partition_at split_at list with
+  | [], _ -> []
+  | current, rest -> current :: partition_all split_at rest
+
 let ( % ) a b =
   let result = a mod b in
   if result >= 0 then result else result + b
