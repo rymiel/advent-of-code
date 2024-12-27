@@ -18,9 +18,9 @@ let scan_all i fmt f =
   let i = Scanf.Scanning.from_channel i in
   aux i fmt f
 
-module ListExt = Containers.Make (List)
-module ArrayExt = Containers.Make (Array)
-module SeqExt = Containers.Make (Seq)
+module ListExt = Containers.Make (Containers.List)
+module ArrayExt = Containers.Make (Containers.Array)
+module SeqExt = Containers.Make (Containers.Seq)
 
 (* backwards compatibility *)
 let sum = ListExt.sum

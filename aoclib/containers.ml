@@ -2,11 +2,14 @@ module type Container = sig
   type 'a t
 
   val fold_left : ('acc -> 'a -> 'acc) -> 'acc -> 'a t -> 'acc
+  val uncons : 'a t -> ('a * 'a t) option
 end
 
 module type S = sig
   type 'a t
 
+  val fold_left : ('acc -> 'a -> 'acc) -> 'acc -> 'a t -> 'acc
+  val uncons : 'a t -> ('a * 'a t) option
   val sum : int t -> int
   val product : int t -> int
   val count_matches : ('a -> bool) -> 'a t -> int
@@ -15,9 +18,12 @@ module type S = sig
   val max : int t -> int
   val min : int t -> int
   val map_sum : ('a -> int) -> 'a t -> int
+  val fold_left' : ('a -> 'a -> 'a) -> 'a t -> 'a
 end
 
 module Make (C : Container) : S with type 'a t := 'a C.t = struct
+  let fold_left = C.fold_left
+  let uncons = C.uncons
   let sum = C.fold_left ( + ) 0
   let product = C.fold_left ( * ) 1
 
@@ -32,4 +38,28 @@ module Make (C : Container) : S with type 'a t := 'a C.t = struct
   let max = C.fold_left max Int.min_int
   let min = C.fold_left min Int.max_int
   let map_sum f = C.fold_left (fun acc i -> acc + f i) 0
+
+  let fold_left' f c =
+    match uncons c with
+    | None -> invalid_arg "fold_left'"
+    | Some (x, xs) -> fold_left f x xs
 end
+
+module List : Container with type 'a t = 'a List.t = struct
+  type 'a t = 'a list
+
+  let fold_left = List.fold_left
+  let uncons = function [] -> None | x :: xs -> Some (x, xs)
+end
+
+module Array : Container with type 'a t = 'a Array.t = struct
+  type 'a t = 'a array
+
+  let fold_left = Array.fold_left
+
+  let uncons arr =
+    if Array.length arr = 0 then None
+    else Some (arr.(0), Array.sub arr 1 (Array.length arr - 1))
+end
+
+module Seq : Container with type 'a t = 'a Seq.t = Seq
