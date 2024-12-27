@@ -223,3 +223,14 @@ let sliding_window : 'a. int -> 'a Seq.t -> 'a array Seq.t =
 
 let sliding_pair : 'a. 'a Seq.t -> ('a * 'a) Seq.t =
  fun seq -> sliding_window 2 seq |> Seq.map (fun arr -> (arr.(0), arr.(1)))
+
+let fixed_window : 'a. int -> 'a Seq.t -> 'a array Seq.t =
+  let rec filteri f i seq () =
+    match seq () with
+    | Seq.Nil -> Seq.Nil
+    | Seq.Cons (x, next) ->
+        if f i then Seq.Cons (x, filteri f (i + 1) next)
+        else filteri f (i + 1) next ()
+  in
+  let filteri f seq = filteri f 0 seq in
+  fun size seq -> sliding_window size seq |> filteri (fun i -> i mod size = 0)
