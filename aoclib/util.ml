@@ -234,3 +234,11 @@ let fixed_window : 'a. int -> 'a Seq.t -> 'a array Seq.t =
   in
   let filteri f seq = filteri f 0 seq in
   fun size seq -> sliding_window size seq |> filteri (fun i -> i mod size = 0)
+
+let rec permute_pairs seq =
+  match seq () with
+  | Seq.Nil -> Seq.empty
+  | Seq.Cons (x, next) ->
+      let s = Seq.map (fun y -> (x, y)) next in
+      let n = permute_pairs next in
+      Seq.append s n
