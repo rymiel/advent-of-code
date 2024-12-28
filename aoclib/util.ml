@@ -242,3 +242,5 @@ let rec permute_pairs seq =
       let s = Seq.map (fun y -> (x, y)) next in
       let n = permute_pairs next in
       Seq.append s n
+
+let sign i = if i > 0 then 1 else if i < 0 then -1 else 0

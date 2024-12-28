@@ -3,6 +3,7 @@ type t = coord
 
 val compare : 'a -> 'a -> int
 val manhattan : coord -> coord -> int
+val chebyshev : coord -> coord -> int
 val ( + ) : coord -> coord -> coord
 val ( - ) : coord -> coord -> coord
 val ( * ) : coord -> int -> coord

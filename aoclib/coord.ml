@@ -3,6 +3,7 @@ type coord = t
 
 let compare = compare
 let manhattan (ax, ay) (bx, by) = abs (ax - bx) + abs (ay - by)
+let chebyshev (ax, ay) (bx, by) = max (abs (bx - ax)) (abs (by - ay))
 
 let ( % ) (ax, ay) (bx, by) : coord =
   let ( % ) a b =
