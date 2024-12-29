@@ -23,6 +23,8 @@ let () =
     | "day8", "b" -> Day8.day8b
     | "day9", "a" -> Day9.day9a
     | "day9", "b" -> Day9.day9b
+    | "day11", "a" -> Day11.day11a
+    | "day11", "b" -> Day11.day11b
     | _ -> failwith (Printf.sprintf "Unknown problem %s %s" problem variant)
   in
   solve 2022 solver problem
