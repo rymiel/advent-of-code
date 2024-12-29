@@ -1,4 +1,4 @@
-type 'a t
+type 'a t = ('a, unit) Hashtbl.t
 
 val is_empty : 'a t -> bool
 val to_seq : 'a t -> 'a Seq.t
