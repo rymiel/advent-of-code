@@ -1,32 +1,28 @@
 open Aoclib
 open Aoclib.Util
 
+let dirs = [ Coord.up; Coord.right; Coord.down; Coord.left ]
+
+let flood_fill table (ix, iy) chr =
+  let region = Hashset.create 100 in
+  let rec step p =
+    if Hashtbl.mem region p then ()
+    else
+      match Hashtbl.find_opt table p with
+      | Some c when c = chr ->
+          Hashset.add region p;
+          List.iter (fun d -> step Coord.(p + d)) dirs
+      | _ -> ()
+  in
+  step (ix, iy);
+  region
+
+let area region = Hashtbl.length region
+let parse i = (read_coord_table i (fun _ -> Option.some)).table
+
 let day12a i =
-  let lines = In_channel.input_lines i in
-  let height = List.length lines in
-  let width = List.hd lines |> String.length in
-  let table = Hashtbl.create (height * width) in
-  let add_row y s =
-    List.iteri (fun x c -> Hashtbl.add table (x, y) c) (Util.chars s)
-  in
-  List.iteri (fun y line -> add_row y line) lines;
+  let table = parse i in
   let remaining = Hashtbl.copy table in
-  let dirs = [ (-1, 0); (0, -1); (1, 0); (0, 1) ] in
-  let flood_fill (ix, iy) chr =
-    let region = Hashtbl.create 100 in
-    let rec step p =
-      if Hashtbl.mem region p then ()
-      else
-        match Hashtbl.find_opt table p with
-        | Some c when c = chr ->
-            Hashtbl.add region p ();
-            List.iter (fun d -> step Coord.(p + d)) dirs
-        | _ -> ()
-    in
-    step (ix, iy);
-    region
-  in
-  let area region = Hashtbl.length region in
   let perimeter region =
     Hashtbl.fold
       (fun p () i ->
@@ -40,7 +36,7 @@ let day12a i =
       Hashtbl.to_seq_keys remaining |> Seq.uncons |> Option.get |> fst
     in
     let c = Hashtbl.find table (ix, iy) in
-    let region = flood_fill (ix, iy) c in
+    let region = flood_fill table (ix, iy) c in
     Hashtbl.replace regions region ();
     Hashtbl.iter (fun pos () -> Hashtbl.remove remaining pos) region
   done;
@@ -49,31 +45,8 @@ let day12a i =
     regions 0
 
 let day12b i =
-  let lines = In_channel.input_lines i in
-  let height = List.length lines in
-  let width = List.hd lines |> String.length in
-  let table = Hashtbl.create (height * width) in
-  let add_row y s =
-    List.iteri (fun x c -> Hashtbl.add table (x, y) c) (Util.chars s)
-  in
-  List.iteri (fun y line -> add_row y line) lines;
+  let table = parse i in
   let remaining = Hashtbl.copy table in
-  let dirs = [ (-1, 0); (0, -1); (1, 0); (0, 1) ] in
-  let flood_fill (ix, iy) chr =
-    let region = Hashtbl.create 100 in
-    let rec step (x, y) =
-      if Hashtbl.mem region (x, y) then ()
-      else
-        match Hashtbl.find_opt table (x, y) with
-        | Some c when c = chr ->
-            Hashtbl.add region (x, y) ();
-            List.iter (fun (dx, dy) -> step (x + dx, y + dy)) dirs
-        | _ -> ()
-    in
-    step (ix, iy);
-    region
-  in
-  let area region = Hashtbl.length region in
   let perimeter_points region =
     Hashtbl.fold
       (fun (x, y) () i ->
@@ -118,7 +91,7 @@ let day12b i =
     let ix, iy = choose remaining in
 
     let c = Hashtbl.find table (ix, iy) in
-    let region = flood_fill (ix, iy) c in
+    let region = flood_fill table (ix, iy) c in
     Hashtbl.replace regions region ();
     Hashtbl.iter (fun pos () -> Hashtbl.remove remaining pos) region
   done;

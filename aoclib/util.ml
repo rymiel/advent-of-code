@@ -33,6 +33,7 @@ let fold_lefti = ListExt.fold_lefti
 let chars s = String.to_seq s |> List.of_seq
 let string_of_char = String.make 1
 let chars_s = Fun.compose (List.map string_of_char) chars
+let digit_of_char = Fun.compose int_of_string string_of_char
 
 let count_char char =
   String.fold_left (fun n c -> if c = char then n + 1 else n) 0
@@ -168,6 +169,60 @@ module CharMap2D = struct
   let in_bounds (x, y) (map : t) =
     x >= 0 && y >= 0 && x < map.width && y < map.height
 end
+
+type 'a coord_table = {
+  width : int;
+  height : int;
+  table : (coord, 'a) Hashtbl.t;
+}
+
+let read_coord_table (i : in_channel) (reader : coord -> char -> 'a option) :
+    'a coord_table =
+  let rec input_lines ic =
+    match Stdlib.input_line ic with
+    | line -> if line = "" then [] else line :: input_lines ic
+    | exception End_of_file -> []
+  in
+  let lines = input_lines i in
+  let height = List.length lines in
+  let width = List.hd lines |> String.length in
+  let table = Hashtbl.create (height * width) in
+  let add_row y s =
+    Seq.iteri
+      (fun x c ->
+        match reader (x, y) c with
+        | Some r -> Hashtbl.add table (x, y) r
+        | None -> ())
+      (String.to_seq s)
+  in
+  List.iteri (fun y line -> add_row y line) lines;
+  { width; height; table }
+
+module Maze = struct
+  type 'a maze = {
+    width : int;
+    height : int;
+    start : coord;
+    goal : coord;
+    table : (coord, 'a) Hashtbl.t;
+  }
+end
+
+type mazectx = { start : coord ref; goal : coord ref }
+
+let read_maze (i : in_channel) (reader : mazectx -> coord -> char -> 'a option)
+    : 'a Maze.maze =
+  let start = ref (0, 0) in
+  let goal = ref (0, 0) in
+  let ctx = { start; goal } in
+  let t = read_coord_table i (reader ctx) in
+  {
+    width = t.width;
+    height = t.height;
+    start = !start;
+    goal = !goal;
+    table = t.table;
+  }
 
 module Pathfind = Astar.Make (Coord)
 

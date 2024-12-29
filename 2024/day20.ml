@@ -2,22 +2,13 @@ open Aoclib
 open Aoclib.Util
 
 let parse_day20 i =
-  let lines = In_channel.input_lines i in
-  let height = List.length lines in
-  let width = List.hd lines |> String.length in
-  let table = Hashset.create (height * width) in
-  let start = ref (0, 0) in
-  let goal = ref (0, 0) in
-  let add_row y s =
-    List.iteri
-      (fun x c ->
-        if c = '#' then Hashset.add table (x, y);
-        if c = 'S' then start := (x, y);
-        if c = 'E' then goal := (x, y))
-      (chars s)
+  let { Maze.table; width; height; start; goal } =
+    read_maze i (fun { start; goal } pos c ->
+        if c = 'S' then start := pos;
+        if c = 'E' then goal := pos;
+        if c = '#' then Some () else None)
   in
-  List.iteri (fun y line -> add_row y line) lines;
-  cardinal_pathfind ~width ~height table !start !goal |> Option.get
+  cardinal_pathfind ~width ~height table start goal |> Option.get
 
 let day20a i =
   let path = parse_day20 i in

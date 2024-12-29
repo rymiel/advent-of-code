@@ -23,17 +23,7 @@ let step table =
 let occupied table = Hashtbl.fold (fun _ v i -> if v then i + 1 else i) table 0
 
 let parse i =
-  let lines = In_channel.input_lines i in
-  let height = List.length lines in
-  let width = List.hd lines |> String.length in
-  let table = Hashtbl.create (height * width) in
-  let add_row y s =
-    List.iteri
-      (fun x c -> if c = 'L' then Hashtbl.add table (x, y) false)
-      (chars s)
-  in
-  List.iteri (fun y line -> add_row y line) lines;
-  (width, height, table)
+  read_coord_table i (fun _ c -> if c = 'L' then Some false else None)
 
 let find_equilibrium step_fn table =
   Seq.iterate step_fn table |> Seq.map occupied |> sliding_pair
@@ -41,10 +31,10 @@ let find_equilibrium step_fn table =
   |> Option.get |> fst
 
 let day11a i =
-  let _, _, table = parse i in
-  find_equilibrium step table
+  let table = parse i in
+  find_equilibrium step table.table
 
-let visibility_lookup width height table =
+let visibility_lookup { width; height; table } =
   let oob (x, y) = x < 0 || y < 0 || x >= width || y >= height in
   let visible = Hashtbl.create 1_000_000 in
   let rec raycast cur dir =
@@ -76,6 +66,6 @@ let step2 lookup table =
   new_table
 
 let day11b i =
-  let width, height, table = parse i in
-  let lookup = visibility_lookup width height table in
-  find_equilibrium (step2 lookup) table
+  let table = parse i in
+  let lookup = visibility_lookup table in
+  find_equilibrium (step2 lookup) table.table

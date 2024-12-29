@@ -11,22 +11,10 @@ module DirectionalPathfind = Astar.Make (struct
 end)
 
 let parse i =
-  let lines = In_channel.input_lines i in
-  let height = List.length lines in
-  let width = List.hd lines |> String.length in
-  let table = Hashset.create (height * width) in
-  let start = ref (0, 0) in
-  let goal = ref (0, 0) in
-  let add_row y s =
-    List.iteri
-      (fun x c ->
-        if c = '#' then Hashset.add table (x, y);
-        if c = 'S' then start := (x, y);
-        if c = 'E' then goal := (x, y))
-      (chars s)
-  in
-  List.iteri (fun y line -> add_row y line) lines;
-  (width, height, table, !start, !goal)
+  read_maze i (fun { start; goal } pos c ->
+      if c = 'S' then start := pos;
+      if c = 'E' then goal := pos;
+      if c = '#' then Some () else None)
 
 let dirs = [ Up; Right; Down; Left ]
 let in_bounds width height (x, y) = x >= 0 && y >= 0 && x < width && y < height
@@ -55,7 +43,7 @@ let distance (p1, dir1) (p2, dir2) =
   Coord.manhattan p1 p2 + (rotations dir1 dir2 * 1000)
 
 let day16a i =
-  let width, height, table, start, goal = parse i in
+  let { Maze.table; width; height; start; goal } = parse i in
   let neighbours = neighbours width height table goal in
   let path =
     DirectionalPathfind.pathfind
@@ -70,7 +58,7 @@ let day16a i =
   |> snd
 
 let day16b i =
-  let width, height, table, start, goal = parse i in
+  let { Maze.table; width; height; start; goal } = parse i in
   let neighbours = neighbours width height table goal in
   let set = Hashset.create 1_000_000 in
   let reconstruct_paths came_from current =

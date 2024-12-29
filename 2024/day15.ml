@@ -11,25 +11,21 @@ let direction = function
   | _ -> failwith "invalid dir"
 
 let day15a i =
-  let map_lines, path_lines = partition_at "" (In_channel.input_lines i) in
-  let path = String.concat "" path_lines |> chars |> List.map direction in
-  let table = Hashtbl.create 1000 in
-  let robot = ref (0, 0) in
-  let add_row y s =
-    List.iteri
-      (fun x c ->
-        Hashtbl.replace table (x, y)
-          (match c with
-          | '#' -> Wall
-          | 'O' -> Box
-          | '.' -> Air
-          | '@' ->
-              robot := (x, y);
-              Air
-          | _ -> failwith "invalid thing"))
-      (chars s)
+  let { Maze.table; start; _ } =
+    read_maze i (fun { start; _ } pos c ->
+        (match c with
+        | '#' -> Wall
+        | 'O' -> Box
+        | '.' -> Air
+        | '@' ->
+            start := pos;
+            Air
+        | _ -> failwith "invalid thing")
+        |> Option.some)
   in
-  List.iteri add_row map_lines;
+  let path =
+    String.concat "" (In_channel.input_lines i) |> chars |> List.map direction
+  in
   let move from target =
     Hashtbl.replace table from Air;
     Hashtbl.replace table target Box;
@@ -42,14 +38,14 @@ let day15a i =
     | Wall -> false
     | Box -> if push target dir then move from target else false
   in
-  let simulate move =
-    let target = Coord.(!robot >> move) in
+  let simulate robot move =
+    let target = Coord.(robot >> move) in
     match Hashtbl.find table target with
-    | Air -> robot := target
-    | Wall -> ()
-    | Box -> if push target move then robot := target else ()
+    | Air -> target
+    | Wall -> robot
+    | Box -> if push target move then target else robot
   in
-  List.iter simulate path;
+  List.fold_left simulate start path |> ignore;
   Hashtbl.fold
     (fun (x, y) v i -> i + if v = Box then x + (100 * y) else 0)
     table 0

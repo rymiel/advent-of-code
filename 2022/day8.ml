@@ -1,19 +1,7 @@
 open Aoclib
 open Aoclib.Util
 
-let parse i =
-  let lines = In_channel.input_lines i in
-  let height = List.length lines in
-  let width = List.hd lines |> String.length in
-  let table = Hashtbl.create (height * width) in
-  let add_row y s =
-    List.iteri
-      (fun x c -> Hashtbl.add table (x, y) c)
-      (chars_s s |> List.map int_of_string)
-  in
-  List.iteri (fun y line -> add_row y line) lines;
-  table
-
+let parse i = (read_coord_table i (fun _ c -> Some (digit_of_char c))).table
 let dirs = [ Dir.Up; Dir.Right; Dir.Down; Dir.Left ]
 
 let day8a i =
