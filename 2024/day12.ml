@@ -18,7 +18,7 @@ let flood_fill table (ix, iy) chr =
   region
 
 let area region = Hashtbl.length region
-let parse i = (read_coord_table i (fun _ -> Option.some)).table
+let parse i = (read_coord_table i Option.some).table
 
 let day12a i =
   let table = parse i in

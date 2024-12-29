@@ -12,7 +12,7 @@ let rec nines table from =
     |> List.concat_map (nines table)
 
 let parse_day10a i =
-  (read_coord_table i (fun _ c -> Some (digit_of_char c))).table
+  (read_coord_table i (fun c -> Some (digit_of_char c))).table
 
 let day10a i =
   let table = parse_day10a i in

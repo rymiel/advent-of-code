@@ -21,9 +21,7 @@ let step table =
   new_table
 
 let occupied table = Hashtbl.fold (fun _ v i -> if v then i + 1 else i) table 0
-
-let parse i =
-  read_coord_table i (fun _ c -> if c = 'L' then Some false else None)
+let parse i = read_coord_table i (fun c -> if c = 'L' then Some false else None)
 
 let find_equilibrium step_fn table =
   Seq.iterate step_fn table |> Seq.map occupied |> sliding_pair

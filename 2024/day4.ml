@@ -1,7 +1,7 @@
 open Aoclib
 open Aoclib.Util
 
-let parse_day4 i = (read_coord_table i (fun _ -> Option.some)).table
+let parse_day4 i = (read_coord_table i Option.some).table
 
 let day4a i =
   let table = parse_day4 i in

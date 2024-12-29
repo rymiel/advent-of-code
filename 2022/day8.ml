@@ -1,7 +1,7 @@
 open Aoclib
 open Aoclib.Util
 
-let parse i = (read_coord_table i (fun _ c -> Some (digit_of_char c))).table
+let parse i = (read_coord_table i (fun c -> Some (digit_of_char c))).table
 let dirs = [ Dir.Up; Dir.Right; Dir.Down; Dir.Left ]
 
 let day8a i =
