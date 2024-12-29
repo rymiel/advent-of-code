@@ -66,15 +66,10 @@ let day11a i =
   |> Array.to_list |> List.sort compare |> List.rev |> List.to_seq |> Seq.take 2
   |> SeqExt.product
 
-let rec gcd a b = match b with 0 -> a | b -> gcd b (a mod b)
-let lcm a b = a * b / gcd a b
-
 let monkey_business2 monkeys monkey num =
   incr monkey.tally;
   let num = run_operation monkey.operation num in
-  let num =
-    num mod (Array.map (fun m -> m.test) monkeys |> ArrayExt.fold_left' lcm)
-  in
+  let num = num mod Array.fold_left (fun i m -> i * m.test) 1 monkeys in
   let divisible = num mod monkey.test = 0 in
   let next_monkey =
     monkeys.(if divisible then monkey.if_true else monkey.if_false)
