@@ -9,6 +9,7 @@ let solve (year : int) (s : solver) (problem : string) : unit =
 let scan_lines (i : in_channel) fmt f =
   In_channel.input_lines i |> List.map (fun s -> Scanf.sscanf s fmt f)
 
+(* todo: needs a better api, better naming, and deduplication *)
 let scan_all i fmt f =
   let rec aux i fmt f =
     match Scanf.bscanf i fmt f with
@@ -16,6 +17,15 @@ let scan_all i fmt f =
     | exception End_of_file -> []
   in
   let i = Scanf.Scanning.from_channel i in
+  aux i fmt f
+
+let scan_all_str s fmt f =
+  let rec aux i fmt f =
+    match Scanf.bscanf i fmt f with
+    | x -> x :: aux i fmt f
+    | exception End_of_file -> []
+  in
+  let i = Scanf.Scanning.from_string s in
   aux i fmt f
 
 module ListExt = Containers.Make (Containers.List)

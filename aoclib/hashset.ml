@@ -10,3 +10,4 @@ let mem = Hashtbl.mem
 let iter f set = Hashtbl.iter (fun k () -> f k) set
 let clear = Hashtbl.clear
 let length = Hashtbl.length
+let copy = Hashtbl.copy

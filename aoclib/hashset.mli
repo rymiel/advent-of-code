@@ -10,3 +10,4 @@ val mem : 'a t -> 'a -> bool
 val iter : ('a -> unit) -> 'a t -> unit
 val clear : 'a t -> unit
 val length : 'a t -> int
+val copy : 'a t -> 'a t
