@@ -7,3 +7,5 @@
 (package
  (name aoc)
  (depends ocaml zarith domainslib))
+
+(using menhir 3.0)
