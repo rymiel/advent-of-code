@@ -1,4 +1,4 @@
 (executable
  (public_name aoc2020)
  (name main)
- (libraries aoclib zarith day18ex))
+ (libraries aoclib zarith day18ex day19ex))
