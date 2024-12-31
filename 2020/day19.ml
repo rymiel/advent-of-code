@@ -5,11 +5,12 @@ let skip s n = String.sub s n (String.length s - n)
 
 let parse i =
   let rules, input = In_channel.input_lines i |> partition_at "" in
-  let rules =
-    List.map (fun s -> Parser.rule Lexer.token (Lexing.from_string s)) rules
-  in
   let table = Hashtbl.create 0 in
-  List.iter (fun (i, e) -> Hashtbl.replace table i e) rules;
+  List.iter
+    (fun s ->
+      let i, e = Parser.rule Lexer.token (Lexing.from_string s) in
+      Hashtbl.replace table i e)
+    rules;
   (table, input)
 
 let day19a i =
