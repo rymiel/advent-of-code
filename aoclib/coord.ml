@@ -5,7 +5,7 @@ let compare = compare
 let manhattan (ax, ay) (bx, by) = abs (ax - bx) + abs (ay - by)
 let chebyshev (ax, ay) (bx, by) = max (abs (bx - ax)) (abs (by - ay))
 
-let ( % ) (ax, ay) (bx, by) : coord =
+let ( % ) (ax, ay) (bx, by) =
   let ( % ) a b =
     let result = a mod b in
     if result >= 0 then result else result + b

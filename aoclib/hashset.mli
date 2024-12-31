@@ -11,3 +11,4 @@ val iter : ('a -> unit) -> 'a t -> unit
 val clear : 'a t -> unit
 val length : 'a t -> int
 val copy : 'a t -> 'a t
+val filter_inplace : ('a -> bool) -> 'a t -> unit

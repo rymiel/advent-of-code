@@ -11,3 +11,6 @@ let iter f set = Hashtbl.iter (fun k () -> f k) set
 let clear = Hashtbl.clear
 let length = Hashtbl.length
 let copy = Hashtbl.copy
+
+let filter_inplace f =
+  Hashtbl.filter_map_inplace (fun k () -> if f k then Some () else None)

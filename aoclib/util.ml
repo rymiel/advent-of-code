@@ -190,6 +190,11 @@ module Maze = struct
   }
 end
 
+let read_matrix (i : in_channel) (reader : coord -> char -> unit) =
+  let lines = In_channel.input_lines i in
+  let iter_row y s = Seq.iteri (fun x c -> reader (x, y) c) (String.to_seq s) in
+  List.iteri (fun y line -> iter_row y line) lines
+
 type mazectx = { start : coord ref; goal : coord ref }
 
 let read_maze (i : in_channel) (reader : mazectx -> coord -> char -> 'a option)
