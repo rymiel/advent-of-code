@@ -5,6 +5,8 @@ let parse i =
   In_channel.input_lines i |> partition_at ""
   |> Pair.map (fun l -> List.tl l |> List.map int_of_string)
 
+let score l = List.rev l |> List.mapi (fun i n -> (i + 1) * n) |> ListExt.sum
+
 let day22a i =
   let p1, p2 = parse i in
   let do_round = function
@@ -13,9 +15,6 @@ let day22a i =
         else (p1_rest, p2_rest @ [ p2_head; p1_head ])
     | _, _ -> failwith "invalid"
   in
-  let score l =
-    List.rev l |> List.mapi (fun i n -> (i + 1) * n) |> ListExt.sum
-  in
   Seq.iterate do_round (p1, p2)
   |> Seq.drop_while (fun (p1, p2) ->
          not @@ (List.is_empty p1 || List.is_empty p2))
@@ -23,9 +22,6 @@ let day22a i =
 
 let day22b i =
   let p1, p2 = parse i in
-  let score l =
-    List.rev l |> List.mapi (fun i n -> (i + 1) * n) |> ListExt.sum
-  in
   let rec try_round cache = function
     | (p1_head :: p1_rest as p1), (p2_head :: p2_rest as p2) ->
         if Hashset.mem cache (p1, p2) then
