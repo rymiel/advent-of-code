@@ -10,5 +10,5 @@ to the solution file while being in the year's directory.
 
 ## Ocaml
 
-Years 2020 and 2024 are solved in Ocaml. There is a global dune project setup to facililtate the use of the shared utilities library `aoclib`.
+Years 2020, 2022 and 2024 are solved in Ocaml. There is a global dune project setup to facililtate the use of the shared utilities library `aoclib`.
 Solutions can be run using `dune exec aoc2024 day1 a`, changing the year number or day number as appropriate.
