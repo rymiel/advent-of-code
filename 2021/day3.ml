@@ -24,7 +24,6 @@ let day3b i =
     |> Seq.fold_left
          (fun lines i ->
            match lines with
-           | [] -> []
            | x :: [] -> [ x ]
            | lines ->
                let ones, zeroes =
