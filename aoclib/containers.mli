@@ -17,6 +17,8 @@ module type S = sig
   val fold_lefti : ('acc -> 'a -> int -> 'acc) -> 'acc -> 'a t -> 'acc
   val max : int t -> int
   val min : int t -> int
+  val minmax : int t -> (int * int)
+  val map_minmax : ('a -> int) -> 'a t -> int * int
   val map_sum : ('a -> int) -> 'a t -> int
   val fold_left' : ('a -> 'a -> 'a) -> 'a t -> 'a
 end
