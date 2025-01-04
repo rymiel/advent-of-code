@@ -308,3 +308,8 @@ let rec permute_pairs seq =
       Seq.append s n
 
 let sign i = if i > 0 then 1 else if i < 0 then -1 else 0
+let rec walk i d () = Seq.Cons (i, walk (i + d) d)
+
+let range b e =
+  if b <= e then Seq.ints b |> Seq.take (e - b + 1)
+  else walk b (-1) |> Seq.take (b - e + 1)

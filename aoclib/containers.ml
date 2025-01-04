@@ -22,6 +22,7 @@ module type S = sig
   val map_sum : ('a -> int) -> 'a t -> int
   val fold_left' : ('a -> 'a -> 'a) -> 'a t -> 'a
   val last : 'a t -> 'a
+  val tally : 'a t -> ('a, int) Hashtbl.t
 end
 
 module Make (C : Container) : S with type 'a t := 'a C.t = struct
@@ -61,6 +62,15 @@ module Make (C : Container) : S with type 'a t := 'a C.t = struct
     | Some (x, xs) -> fold_left f x xs
 
   let last c = fold_left' (fun _ x -> x) c
+
+  let tally c =
+    let table = Hashtbl.create 0 in
+    C.fold_left
+      (fun () i ->
+        Hashtbl.replace table i
+          (Option.value ~default:0 (Hashtbl.find_opt table i) + 1))
+      () c;
+    table
 end
 
 module List : Container with type 'a t = 'a List.t = struct
