@@ -21,6 +21,7 @@ module type S = sig
   val map_minmax : ('a -> int) -> 'a t -> int * int
   val map_sum : ('a -> int) -> 'a t -> int
   val fold_left' : ('a -> 'a -> 'a) -> 'a t -> 'a
+  val last : 'a t -> 'a
 end
 
 module Make (C : Container) : S with type 'a t := 'a C.t = struct
@@ -58,6 +59,8 @@ module Make (C : Container) : S with type 'a t := 'a C.t = struct
     match uncons c with
     | None -> invalid_arg "fold_left'"
     | Some (x, xs) -> fold_left f x xs
+
+  let last c = fold_left' (fun _ x -> x) c
 end
 
 module List : Container with type 'a t = 'a List.t = struct

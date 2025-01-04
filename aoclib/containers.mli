@@ -21,6 +21,7 @@ module type S = sig
   val map_minmax : ('a -> int) -> 'a t -> int * int
   val map_sum : ('a -> int) -> 'a t -> int
   val fold_left' : ('a -> 'a -> 'a) -> 'a t -> 'a
+  val last : 'a t -> 'a
 end
 
 module Make : functor (C : Container) -> S with type 'a t := 'a C.t
