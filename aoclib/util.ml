@@ -313,3 +313,11 @@ let rec walk i d () = Seq.Cons (i, walk (i + d) d)
 let range b e =
   if b <= e then Seq.ints b |> Seq.take (e - b + 1)
   else walk b (-1) |> Seq.take (b - e + 1)
+
+(* TODO: use List.take when OCaml 5.3 releases *)
+let list_take n l =
+  let[@tail_mod_cons] rec aux n l =
+    match (n, l) with 0, _ | _, [] -> [] | n, x :: l -> x :: aux (n - 1) l
+  in
+  if n < 0 then invalid_arg "List.take";
+  aux n l
