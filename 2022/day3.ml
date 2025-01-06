@@ -26,5 +26,6 @@ let day3b i =
   |> SeqExt.map_sum (fun f ->
          f
          |> Array.map (Fun.compose CharSet.of_list chars)
-         |> ArrayExt.fold_left' CharSet.inter
+         |> Array.to_seq
+         |> SeqExt.fold_left' CharSet.inter
          |> CharSet.to_list |> ListExt.map_sum priority)

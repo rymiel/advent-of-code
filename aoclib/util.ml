@@ -28,9 +28,17 @@ let scan_all_str s fmt f =
   let i = Scanf.Scanning.from_string s in
   aux i fmt f
 
-module ListExt = Containers.Make (Containers.List)
-module ArrayExt = Containers.Make (Containers.Array)
-module SeqExt = Containers.Make (Containers.Seq)
+module ListExt = struct
+  include Containers.Foldable.List
+  include Containers.Unconsable.List
+end
+
+module ArrayExt = Containers.Foldable.Array
+
+module SeqExt = struct
+  include Containers.Foldable.Seq
+  include Containers.Unconsable.Seq
+end
 
 (* backwards compatibility *)
 let sum = ListExt.sum
