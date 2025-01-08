@@ -12,3 +12,4 @@ val clear : 'a t -> unit
 val length : 'a t -> int
 val copy : 'a t -> 'a t
 val filter_inplace : ('a -> bool) -> 'a t -> unit
+val filter_map : ('a -> 'a option) -> 'a t -> 'a t
