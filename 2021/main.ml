@@ -33,6 +33,8 @@ let () =
     | "day15", "b" -> Day15.day15b
     | "day16", "a" -> Day16.day16a
     | "day16", "b" -> Day16.day16b
+    | "day17", "a" -> Day17.day17a
+    | "day17", "b" -> Day17.day17b
     | _ -> failwith (Printf.sprintf "Unknown problem %s %s" problem variant)
   in
   solve 2021 solver problem
