@@ -47,6 +47,6 @@ let day13a i =
 
 let day13b i =
   let paper, folds = parse i in
-  let folded = List.fold_left (do_fold) paper folds in
+  let folded = List.fold_left do_fold paper folds in
   print_paper folded;
   0
