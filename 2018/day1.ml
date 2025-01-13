@@ -1,9 +1,9 @@
 open Aoclib
 open Aoclib.Util
 
-let day1a i = In_channel.input_lines i |> ListExt.map_sum int_of_string
+let part1 i = In_channel.input_lines i |> ListExt.map_sum int_of_string
 
-let day1b i =
+let part2 i =
   let cache = Hashset.create 1000 in
   In_channel.input_lines i |> List.to_seq |> Seq.map int_of_string |> Seq.cycle
   |> Seq.scan ( + ) 0
