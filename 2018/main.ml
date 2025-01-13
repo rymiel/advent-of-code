@@ -11,8 +11,8 @@ let () =
   let problem = Sys.argv.(1) in
   let variant = Sys.argv.(2) in
   let day_idx = Scanf.sscanf problem "day%d" (fun i -> i - 1) in
-  let module Selected = (val List.nth days day_idx : Day) in
-  let solver : solver =
+  let module Selected = (val List.nth days day_idx) in
+  let solver =
     match variant with
     | "a" -> Selected.part1
     | "b" -> Selected.part2
