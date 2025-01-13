@@ -19,6 +19,8 @@ let () =
     | "day6", "b" -> Day6.day6b
     | "day7", "a" -> Day7.day7a
     | "day7", "b" -> Day7.day7b
+    | "day8", "a" -> Day8.day8a
+    | "day8", "b" -> Day8.day8b
     | "day9", "a" -> Day9.day9a
     | "day9", "b" -> Day9.day9b
     | "day10", "a" -> Day10.day10a
