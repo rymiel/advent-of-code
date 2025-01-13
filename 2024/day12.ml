@@ -6,7 +6,7 @@ let dirs = [ Coord.up; Coord.right; Coord.down; Coord.left ]
 let flood_fill table (ix, iy) chr =
   let region = Hashset.create 100 in
   let rec step p =
-    if Hashtbl.mem region p then ()
+    if Hashset.mem region p then ()
     else
       match Hashtbl.find_opt table p with
       | Some c when c = chr ->
