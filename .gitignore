@@ -5,6 +5,7 @@ txt/
 input/
 lib/
 _build/
+build/
 .vscode/
 shard.lock
 *.png

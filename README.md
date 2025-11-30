@@ -1,6 +1,6 @@
 # Advent of code
 
-Each year is a separate directory.
+This repo contains my solutions to [Advent of Code](https://adventofcode.com/) and [MITS advent calendar](https://kood.mits.ee/). Each year is a separate directory.
 
 ## Crystal
 
@@ -12,3 +12,8 @@ to the solution file while being in the year's directory.
 
 Years 2020, 2021, 2022 and 2024 are solved in Ocaml. There is a global dune project setup to facililtate the use of the shared utilities library `aoclib`.
 Solutions can be run using `dune exec aoc2024 day1 a`, changing the year number or day number as appropriate.
+
+## C++
+
+Year 2025 is solved using C++23. There is a global Makefile for these solutions. Solutions can be run using `make 2025/day1.a`,
+changing the year number or day number as appropriate.

@@ -1,0 +1,3 @@
+-std=std++23
+-pipe
+-static
