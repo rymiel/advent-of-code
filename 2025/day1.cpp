@@ -4,12 +4,9 @@
 
 auto parse() {
   std::vector<int> commands;
-  while (true) {
-    char c;
-    int n;
-    std::cin >> c >> n;
-    if (std::cin.eof())
-      break;
+  char c;
+  int n;
+  while (std::cin >> c >> n) {
     if (c == 'L')
       n = -n;
     commands.push_back(n);
@@ -43,15 +40,15 @@ void part2() {
   int pointer = 50;
   for (int c : commands) {
     int neg_diff = 0 - pointer;
-    if (neg_diff == 0) neg_diff = -100;
+    if (neg_diff == 0)
+      neg_diff = -100;
     int pos_diff = 100 - pointer;
     pointer = mod((pointer + c), 100);
 
-    if (c < 0 && c <= neg_diff) {
+    if (c < 0 && c <= neg_diff)
       count += -(c - neg_diff) / 100 + 1;
-    } else if (c > 0 && c >= pos_diff) {
+    else if (c > 0 && c >= pos_diff)
       count += (c - pos_diff) / 100 + 1;
-    }
   }
 
   std::cout << count << "\n";
