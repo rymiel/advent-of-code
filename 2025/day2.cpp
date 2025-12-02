@@ -23,17 +23,19 @@ auto round_up(uint64_t i, int b = 2) {
   if (digits % b == 0)
     return i;
   auto new_digits = (digits / b + 1) * b;
-  return std::stoul("1" + std::string(new_digits - 1, '0'));
+
+  return ipow(10ul, new_digits - 1);
 }
 
 auto round_down(uint64_t i, int b = 2) {
   int digits = std::to_string(i).size();
   if (digits % b == 0)
     return i;
-  auto new_digits = (digits / b) * b;
-  if (new_digits == 0)
+  if (digits < b)
     return 0ul;
-  return std::stoul(std::string(new_digits, '9'));
+  auto new_digits = (digits / b) * b;
+
+  return ipow(10ul, new_digits) - 1;
 }
 
 auto repeat(uint64_t n, int b = 2) {

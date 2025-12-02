@@ -14,11 +14,6 @@ auto parse() {
   return commands;
 }
 
-int mod(int x, int y) {
-  int m = x % y;
-  return m + (m < 0 ? y : 0);
-}
-
 void part1() {
   auto commands = parse();
 

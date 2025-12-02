@@ -1,4 +1,5 @@
 #include <cstring>
+#include "lib.hpp"
 
 void part1();
 void part2();
