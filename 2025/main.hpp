@@ -4,13 +4,13 @@ void part1();
 void part2();
 
 int main(int argc, char* argv[]) {
-  if (argc < 2) return 2;
+  if (argc < 2)
+    return 2;
 
-  if (strcmp(argv[1], "a") == 0) {
+  if (strcmp(argv[1], "a") == 0)
     part1();
-  } else if (strcmp(argv[1], "b") == 0) {
+  else if (strcmp(argv[1], "b") == 0)
     part2();
-  } else {
+  else
     return 3;
-  }
 }
