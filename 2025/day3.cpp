@@ -3,19 +3,9 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
-#include <vector>
-
-auto parse() {
-  std::vector<std::string> lines;
-  std::string s;
-  while (std::getline(std::cin, s)) {
-    lines.push_back(s);
-  }
-  return lines;
-}
 
 void part1() {
-  auto lines = parse();
+  auto lines = read_lines();
 
   int sum = 0;
   for (const auto& s : lines) {
@@ -28,7 +18,7 @@ void part1() {
 }
 
 void part2() {
-  auto lines = parse();
+  auto lines = read_lines();
 
   uint64_t sum = 0;
   for (const auto& s : lines) {
