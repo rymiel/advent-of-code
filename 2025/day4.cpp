@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include <algorithm>
+#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -8,10 +9,52 @@ struct Point {
   int x, y;
 
   auto operator+(const Point& other) const -> Point { return {x + other.x, y + other.y}; }
+
+  friend std::ostream& operator<<(std::ostream& s, const Point& p) { return s << '(' << p.x << ',' << p.y << ')'; }
 };
 
 std::array<Point, 8> neighbours = {Point{-1, -1}, Point{-1, 0}, Point{-1, 1}, Point{0, -1},
                                    Point{0, 1},   Point{1, -1}, Point{1, 0},  Point{1, 1}};
+
+class PointIota {
+  Point bound;
+
+public:
+  class Iterator {
+    int n;
+    int w;
+
+  public:
+    Iterator(int n, int w) : n{n}, w{w} {}
+
+    using iterator_category = std::forward_iterator_tag;
+    using value_type = Point;
+
+    value_type operator*() const {
+      auto [q, r] = std::div(n, w);
+      return Point{r, q};
+    }
+
+    Iterator& operator++() {
+      n++;
+      return *this;
+    }
+
+    Iterator operator++(int) {
+      Iterator tmp = *this;
+      ++(*this);
+      return tmp;
+    }
+
+    friend bool operator==(const Iterator& a, const Iterator& b) { return a.n == b.n && a.w == b.w; };
+    friend bool operator!=(const Iterator& a, const Iterator& b) { return a.n != b.n || a.w != b.w; };
+  };
+
+  explicit PointIota(Point bound) : bound{bound} {}
+
+  Iterator begin() { return Iterator(0, bound.x); }
+  Iterator end() { return Iterator(bound.x * bound.y, bound.x); }
+};
 
 template <typename T> class Map2D {
 public:
@@ -33,6 +76,8 @@ public:
       return def;
     return T(operator[](p));
   }
+
+  auto points() { return PointIota{{width, height}}; }
 
   static auto from_lines(std::vector<std::string> lines, const std::invocable<char> auto& fn) -> Map2D<T> {
     int width = lines.at(0).size();
@@ -56,15 +101,12 @@ void part1() {
   auto map = parse();
 
   int sum = 0;
-  for (int y = 0; y < map.height; y++) {
-    for (int x = 0; x < map.width; x++) {
-      Point p{x, y};
-      if (!map.get_or(p, false))
-        continue;
-      int count = std::ranges::count_if(neighbours, [&](Point d) { return map.get_or(p + d, false); });
-      if (count < 4)
-        sum++;
-    }
+  for (auto p : map.points()) {
+    if (!map.get_or(p, false))
+      continue;
+    int count = std::ranges::count_if(neighbours, [&](Point d) { return map.get_or(p + d, false); });
+    if (count < 4)
+      sum++;
   }
 
   std::cout << sum << "\n";
@@ -77,15 +119,12 @@ void part2() {
   std::vector<Point> remove{};
   while (true) {
     remove.clear();
-    for (int y = 0; y < map.height; y++) {
-      for (int x = 0; x < map.width; x++) {
-        Point p{x, y};
-        if (!map.get_or(p, false))
-          continue;
-        int count = std::ranges::count_if(neighbours, [&](Point d) { return map.get_or(p + d, false); });
-        if (count < 4)
-          remove.push_back(p);
-      }
+    for (auto p : map.points()) {
+      if (!map.get_or(p, false))
+        continue;
+      int count = std::ranges::count_if(neighbours, [&](Point d) { return map.get_or(p + d, false); });
+      if (count < 4)
+        remove.push_back(p);
     }
     if (remove.size() == 0)
       break;
