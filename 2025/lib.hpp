@@ -1,3 +1,5 @@
+#pragma once
+
 #include <concepts>
 #include <iostream>
 #include <string>
@@ -25,8 +27,7 @@ template <std::integral T> T mod(T x, T y) {
 inline auto read_lines() -> std::vector<std::string> {
   std::vector<std::string> lines;
   std::string s;
-  while (std::getline(std::cin, s)) {
+  while (std::getline(std::cin, s))
     lines.push_back(s);
-  }
   return lines;
 }
