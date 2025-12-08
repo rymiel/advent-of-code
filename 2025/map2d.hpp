@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <iostream>
 #include <ostream>
 #include <vector>
 
@@ -8,6 +9,7 @@ struct Point {
   int x, y;
 
   auto operator+(const Point& other) const -> Point { return {x + other.x, y + other.y}; }
+  auto operator<=>(const Point& other) const = default;
 
   friend std::ostream& operator<<(std::ostream& s, const Point& p) { return s << '(' << p.x << ',' << p.y << ')'; }
 
@@ -72,6 +74,8 @@ public:
 
   auto operator[](Point p) -> std::vector<T>::reference { return m_data.at(p.y * width + p.x); }
 
+  auto operator<=>(const Map2D<T>& other) const = default;
+
   auto get_or(Point p, T def) {
     if (!in_bounds(p))
       return def;
@@ -80,8 +84,16 @@ public:
 
   auto points() { return PointIota{{width, height}}; }
 
-  static auto from_lines(std::vector<std::string> lines, const std::invocable<char> auto& fn = std::identity{})
-      -> Map2D<T> {
+  void print(std::ostream& os = std::cout) {
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++)
+        os << operator[]({x, y});
+      os << '\n';
+    }
+  }
+
+  template <std::invocable<char> Fn = std::identity>
+  static auto from_lines(std::vector<std::string> lines, const Fn& fn = {}) -> Map2D<T> {
     int width = lines.at(0).size();
     int height = lines.size();
     auto map = Map2D<T>(width, height);
