@@ -11,6 +11,11 @@ struct Point {
   auto operator+(const Point& other) const -> Point { return {x + other.x, y + other.y}; }
   auto operator<=>(const Point& other) const = default;
 
+  friend std::istream& operator>>(std::istream& io, Point& p) {
+    std::ws(io) >> p.x;
+    return io.ignore(1, ',') >> p.y;
+  }
+
   friend std::ostream& operator<<(std::ostream& s, const Point& p) { return s << '(' << p.x << ',' << p.y << ')'; }
 
   static std::array<Point, 8> neighbours;
