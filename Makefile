@@ -1,6 +1,6 @@
 CXX = clang++
 
-COMMONFLAGS := -std=c++23 -pipe -static
+COMMONFLAGS := -std=c++23 -pipe
 DEBUGFLAGS  := -O0 -g
 RELFLAGS    := -O2
 
@@ -18,7 +18,11 @@ WARNING := -Wall -Wextra -Wmost
 
 build/%.o: %.cpp Makefile
 	@mkdir -p $(@D)
-	$(CXX) $(WARNING) $(COMMONFLAGS) $(DEBUGFLAGS) -MD -MP $< -o $@
+	$(CXX) $(WARNING) $(COMMONFLAGS) -static $(DEBUGFLAGS) -MD -MP $< -o $@
+
+build/2025/day10.o: 2025/day10.cpp Makefile
+	@mkdir -p $(@D)
+	$(CXX) $(WARNING) $(COMMONFLAGS) $(DEBUGFLAGS) -lz3 -MD -MP $< -o $@
 
 $(PART1): %.a: build/%.o
 	$< a < $(dir $@)txt/$(basename $(notdir $@)).txt
