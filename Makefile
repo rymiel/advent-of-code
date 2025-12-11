@@ -12,7 +12,7 @@ CXX_DEPENDS := $(patsubst %.cpp,build/%.d,$(CXX_SOURCES))
 PART1	    := $(patsubst %.cpp,%.a,$(CXX_SOURCES))
 PART2       := $(patsubst %.cpp,%.b,$(CXX_SOURCES))
 
-WARNING := -Wall -Wextra -Wmost
+WARNING := -Wall -Wextra -Wmost -Wno-missing-designated-field-initializers
 
 -include $(CXX_DEPENDS)
 
