@@ -19,10 +19,12 @@ struct Point {
   friend std::ostream& operator<<(std::ostream& s, const Point& p) { return s << '(' << p.x << ',' << p.y << ')'; }
 
   static std::array<Point, 8> neighbours;
+  static std::array<Point, 4> cardinals;
 };
 
 inline std::array<Point, 8> Point::neighbours = {Point{-1, -1}, Point{-1, 0}, Point{-1, 1}, Point{0, -1},
                                                  Point{0, 1},   Point{1, -1}, Point{1, 0},  Point{1, 1}};
+inline std::array<Point, 4> Point::cardinals = {Point{-1, 0}, Point{0, -1}, Point{0, 1}, Point{1, 0}};
 
 class PointIota {
   Point bound;
@@ -75,21 +77,23 @@ private:
 public:
   Map2D(int width, int height) : width{width}, height{height}, m_data{std::vector<T>(width * height)} {}
 
-  auto in_bounds(Point p) -> bool { return p.x >= 0 && p.y >= 0 && p.x < width && p.y < height; }
+  auto in_bounds(Point p) const -> bool { return p.x >= 0 && p.y >= 0 && p.x < width && p.y < height; }
 
   auto operator[](Point p) -> std::vector<T>::reference { return m_data.at(p.y * width + p.x); }
 
+  auto operator[](Point p) const -> std::vector<T>::const_reference { return m_data.at(p.y * width + p.x); }
+
   auto operator<=>(const Map2D<T>& other) const = default;
 
-  auto get_or(Point p, T def) {
+  auto get_or(Point p, T def) const {
     if (!in_bounds(p))
       return def;
     return T(operator[](p));
   }
 
-  auto points() { return PointIota{{width, height}}; }
+  auto points() const { return PointIota{{width, height}}; }
 
-  void print(std::ostream& os = std::cout) {
+  void print(std::ostream& os = std::cout) const {
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++)
         os << operator[]({x, y});
@@ -97,17 +101,22 @@ public:
     }
   }
 
-  template <std::invocable<char> Fn = std::identity>
-  static auto from_lines(std::vector<std::string> lines, const Fn& fn = {}) -> Map2D<T> {
+  template <std::invocable<char, Point> Fn>
+  static auto from_lines(const std::vector<std::string>& lines, const Fn& fn) -> Map2D<T> {
     int width = lines.at(0).size();
     int height = lines.size();
     auto map = Map2D<T>(width, height);
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         int c = lines[y][x];
-        map[{x, y}] = fn(c);
+        map[{x, y}] = fn(c, Point{x, y});
       }
     }
     return map;
+  }
+
+  template <std::invocable<char> Fn = std::identity>
+  static auto from_lines(const std::vector<std::string>& lines, const Fn& fn = {}) -> Map2D<T> {
+    return from_lines(lines, [&fn](char c, Point) { return fn(c); });
   }
 };

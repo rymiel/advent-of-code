@@ -1,3 +1,5 @@
 -std=c++23
 -pipe
 -static
+-I
+aoclib++

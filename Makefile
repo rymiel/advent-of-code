@@ -1,6 +1,6 @@
 CXX = clang++
 
-COMMONFLAGS := -std=c++23 -pipe -march=native
+COMMONFLAGS := -I aoclib++ -std=c++23 -pipe -march=native
 DEBUGFLAGS  := -O0 -g
 RELFLAGS    := -O2
 

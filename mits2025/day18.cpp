@@ -1,34 +1,24 @@
+#include "lib.hpp"
+#include "map2d.hpp"
 #include <cstdint>
 #include <iostream>
 #include <limits>
 #include <map>
 #include <queue>
-#include <set>
 #include <utility>
 
-using Coord = std::pair<int, int>;
-
-using Walls = std::set<Coord>;
+using Maze = Map2D<bool>;
 
 struct PQNode {
-  Coord id;
+  Point id;
   int64_t priority;
 
   auto operator<=>(const PQNode& other) const -> std::strong_ordering { return priority <=> other.priority; }
 };
 
-struct Result {
-  std::map<Coord, int> dist;
-};
-
-auto neighbours(Coord c) {
-  auto [x, y] = c;
-  return std::array{Coord{x + 1, y}, Coord{x, y + 1}, Coord{x - 1, y}, Coord{x, y - 1}};
-}
-
-auto dijkstra(const Walls& walls, Coord start, Coord end, Coord bound) -> int {
+auto dijkstra(const Maze& maze, Point start, Point goal) -> int {
   std::priority_queue<PQNode, std::vector<PQNode>, std::greater<>> queue;
-  std::map<Coord, int> dist;
+  std::map<Point, int> dist;
 
   dist.emplace(start, 0);
   queue.emplace(start, 0);
@@ -37,14 +27,12 @@ auto dijkstra(const Walls& walls, Coord start, Coord end, Coord bound) -> int {
     auto u = queue.top();
     queue.pop();
 
-    if (u.id == end)
+    if (u.id == goal)
       return dist.at(u.id);
 
-    auto n = neighbours(u.id);
-    for (auto v : n) {
-      if (v.first < 0 || v.second < 0 || v.first >= bound.first || v.second >= bound.second)
-        continue;
-      if (walls.contains(v))
+    for (auto c : Point::cardinals) {
+      auto v = u.id + c;
+      if (maze.get_or(v, true))
         continue;
 
       auto alt = dist.at(u.id) + 1;
@@ -61,29 +49,18 @@ auto dijkstra(const Walls& walls, Coord start, Coord end, Coord bound) -> int {
 }
 
 int main() {
-  Coord start;
-  Coord goal;
-  Walls walls;
-
-  int y = 0;
-  int width;
-  std::string s;
-  while (std::getline(std::cin, s)) {
-    width = s.size();
-    for (int x = 0; x < s.size(); x++) {
-      char c = s.at(x);
-      if (c == 'L')
-        start = {x, y};
-      if (c == '#')
-        walls.insert({x, y});
-      if (c == 'V')
-        goal = {x, y};
+  Point start;
+  Point goal;
+  Maze maze = Maze::from_lines(read_lines(), [&start, &goal](char c, Point p) {
+    switch (c) {
+    case '#': return true;
+    case 'L': start = p; break;
+    case 'V': goal = p; break;
     }
-    y++;
-  }
-  int height = y;
+    return false;
+  });
 
-  auto r = dijkstra(walls, start, goal, Coord{width, height});
+  auto r = dijkstra(maze, start, goal);
 
   std::cout << r << "\n";
 }
