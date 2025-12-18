@@ -1,23 +1,16 @@
 #include "lib.hpp"
 #include "map2d.hpp"
+#include "priority.hpp"
 #include <cstdint>
 #include <iostream>
 #include <limits>
 #include <map>
-#include <queue>
 #include <utility>
 
 using Maze = Map2D<bool>;
 
-struct PQNode {
-  Point id;
-  int64_t priority;
-
-  auto operator<=>(const PQNode& other) const -> std::strong_ordering { return priority <=> other.priority; }
-};
-
 auto dijkstra(const Maze& maze, Point start, Point goal) -> int {
-  std::priority_queue<PQNode, std::vector<PQNode>, std::greater<>> queue;
+  GreaterPriorityQueue<Point> queue;
   std::map<Point, int> dist;
 
   dist.emplace(start, 0);

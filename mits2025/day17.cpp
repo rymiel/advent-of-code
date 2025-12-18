@@ -1,7 +1,7 @@
+#include "priority.hpp"
 #include <cstdint>
 #include <iostream>
 #include <limits>
-#include <queue>
 #include <sstream>
 #include <unordered_map>
 
@@ -9,20 +9,13 @@ using Id = std::string;
 
 using Graph = std::unordered_multimap<Id, Id>;
 
-struct PQNode {
-  Id id;
-  int64_t priority;
-
-  auto operator<=>(const PQNode& other) const -> std::strong_ordering { return priority <=> other.priority; }
-};
-
 struct Result {
   std::unordered_map<Id, int> dist;
   std::unordered_map<Id, Id> came_from;
 };
 
 auto dijkstra(const Graph& graph, Id start) -> Result {
-  std::priority_queue<PQNode, std::vector<PQNode>, std::greater<>> queue;
+  GreaterPriorityQueue<Id> queue;
   std::unordered_map<Id, int> dist;
   std::unordered_map<Id, Id> came_from;
 
