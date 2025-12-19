@@ -16,4 +16,4 @@ Solutions can be run using `dune exec aoc2024 day1 a`, changing the year number 
 ## C++
 
 Year 2025 is solved using C++23. There is a global Makefile for these solutions and a shared utilities library `aoclib++`.
-Solutions can be run using `make 2025/day1.a`, changing the year number or day number as appropriate.
+Solutions can be run using `make 2025/day1 part=1`, changing the year, day, or part number as appropriate.
